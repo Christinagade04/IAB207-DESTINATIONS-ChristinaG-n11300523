@@ -11,7 +11,7 @@ class EventForm(FlaskForm):
   # adding two validators, one to ensure input is entered and other to check if the 
   # description meets the length requirements
   description = TextAreaField('Description', validators =[InputRequired(), 
-        Length(min=100,message="Description must be greater than 100 characters.")])
+        Length(min=100,max=500, message="Description must be between 100 and 500 characters.")])
   image = FileField('Event Image', validators=[
     FileRequired(message='Image cannot be empty'),
     FileAllowed(ALLOWED_FILE, message='Only PNG or JPG files allowed')])  
@@ -36,8 +36,10 @@ class CommentForm(FlaskForm):
   text = TextAreaField('Comment', [InputRequired()])
   submit = SubmitField('Create')
 
-# class OrderForm(FlaskForm):
-      
+  class OrderForm(FlaskForm):
+    number_of_tickets = IntegerField('Number of Tickets', validators=[InputRequired()])
+    submit = SubmitField('Book Now')
+
 
 # User login
 class LoginForm(FlaskForm):
