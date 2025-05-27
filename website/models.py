@@ -19,10 +19,15 @@ class User(db.Model):
 class Event(db.Model):
     __tablename__ = 'events'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80))
-    description = db.Column(db.String(200))
-    image = db.Column(db.String(400))
-    tickets = db.Column(db.Integer)
+    name = db.Column(db.String(80), nullable=False)
+    description = db.Column(db.String(500), nullable=False)
+    image = db.Column(db.String(400), nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    start_time = db.Column(db.Time, nullable=False)
+    end_time = db.Column(db.Time, nullable=False)
+    location = db.Column(db.String(200), nullable=False)
+    category = db.Column(db.String(50), nullable=False)
+    tickets = db.Column(db.Integer, nullable=False)
     # ... Create the Comments db.relationship
 	# relation to call event.comments and comment.event
     comments = db.relationship('Comment', backref='event')

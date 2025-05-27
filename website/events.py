@@ -10,14 +10,14 @@ from flask_login import login_required, current_user
 event_db = Blueprint('event', __name__, url_prefix='/events')
 
 @event_db.route('/<id>')
-def show(id):
+def details(id):
     event = db.session.scalar(db.select(Event).where(Event.id==id))
     # create the comment form
     form = CommentForm()    
     return render_template('events/event-details.html', event=event, form=form)
 
 @event_db.route('/create', methods=['GET', 'POST'])
-@login_required
+# @login_required
 def create():
   print('Method type: ', request.method)
   form = EventForm()
@@ -28,6 +28,11 @@ def create():
        name=form.name.data,
        description=form.description.data,
        image=db_file_path,
+       date=form.date.data,
+       start_time=form.start_time.data,
+       end_time=form.end_time.data,
+       location=form.location.data,
+       category=form.category.data,
        tickets=form.tickets.data)
     
     # add the object to the db session
@@ -59,15 +64,16 @@ def check_upload_file(form):
   return db_upload_path
 
 @event_db.route('/<id>/comment', methods=['GET', 'POST'])  
-@login_required
+# @login_required
 def comment(id):  
     form = CommentForm()  
     #get the event object associated to the page and the comment
     event = db.session.scalar(db.select(Event).where(Event.id==id))
     if form.validate_on_submit():  
       #read the comment from the form
-      comment = Comment(text=form.text.data, event=event,
-                        user=current_user
+      comment = Comment(text=form.text.data, 
+                        event=event,
+                        # user=current_user
                         ) 
       #here the back-referencing works - comment.event is set
       # and the link is created
@@ -78,5 +84,5 @@ def comment(id):
       flash('Your comment has been added', 'success')
 
       # print('Your comment has been added', 'success') 
-    # using redirect sends a GET request to event.show
-    return redirect(url_for('event.show', id=id))
+    # using redirect sends a GET request to event.details
+    return redirect(url_for('event.details', id=id))
