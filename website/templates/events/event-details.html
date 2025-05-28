@@ -49,7 +49,7 @@
       {{render_form(form,"/events/{0}/comment".format(event.id))}}
       {% for comment in event.comments %}
       <div class="col-md-12">  
-        <b>{{comment.user}} <span class="ml-2 text-muted">{{comment.created_at.strftime('%Y-%m-%d %H:%M')}}</span></b>
+        <b>{{comment.user.name}} <span class="ml-2 text-muted">{{comment.created_at.strftime('%Y-%m-%d %H:%M')}}</span></b>
         <p>{{comment.text}}</p>  
       </div>
       {% endfor %} 

@@ -1,7 +1,8 @@
 from . import db
 from datetime import datetime
+from flask_login import UserMixin
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = 'users' # good practice to specify table name
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), index=True, unique=True, nullable=False)
@@ -11,9 +12,9 @@ class User(db.Model):
     password_hash = db.Column(db.String(255), nullable=False)
 
     # relationships
-    event = db.relationship('Event', backref='users')
-    comments = db.relationship('Comment', backref='users')
-    orders= db.relationship('Order', backref='users')
+    # event = db.relationship('Event', backref='user')
+    comments = db.relationship('Comment', backref='user')
+    # orders= db.relationship('Order', backref='user')
 
     
     # string print method
@@ -34,9 +35,9 @@ class Event(db.Model):
     tickets = db.Column(db.Integer, nullable=False)
 	
     # relation to call event.comments and comment.event
-    comments = db.relationship('Comment', backref='events')
-    orders= db.relationship('Order', backref='events')
-    user= db.relationship('User', backref='events')
+    comments = db.relationship('Comment', backref='event')
+    # orders= db.relationship('Order', backref='event')
+    # user= db.relationship('User', backref='event')
 	
     # string print method
     def __repr__(self):
@@ -66,5 +67,5 @@ class Order(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     # Relationships
-    user = db.relationship('User', backref='orders')
-    event = db.relationship('Event', backref='orders')
+    # user = db.relationship('User', backref='order')
+    # event = db.relationship('Event', backref='order')

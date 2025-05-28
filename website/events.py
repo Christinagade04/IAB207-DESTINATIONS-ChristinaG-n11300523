@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
 from .models import Event, Comment
 from .forms import EventForm, CommentForm
 from . import db
@@ -14,10 +14,12 @@ def details(id):
     event = db.session.scalar(db.select(Event).where(Event.id==id))
     # create the comment form
     form = CommentForm()    
+    if not event:
+       abort(404)
     return render_template('events/event-details.html', event=event, form=form)
 
 @event_db.route('/create', methods=['GET', 'POST'])
-# @login_required
+@login_required
 def create():
   print('Method type: ', request.method)
   form = EventForm()
@@ -64,7 +66,7 @@ def check_upload_file(form):
   return db_upload_path
 
 @event_db.route('/<id>/comment', methods=['GET', 'POST'])  
-# @login_required
+@login_required
 def comment(id):  
     form = CommentForm()  
     #get the event object associated to the page and the comment
@@ -73,7 +75,7 @@ def comment(id):
       #read the comment from the form
       comment = Comment(text=form.text.data, 
                         event=event,
-                        # user=current_user
+                        user=current_user
                         ) 
       #here the back-referencing works - comment.event is set
       # and the link is created
