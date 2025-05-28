@@ -12,9 +12,7 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(255), nullable=False)
 
     # relationships
-    # event = db.relationship('Event', backref='user')
     comments = db.relationship('Comment', backref='user')
-    # orders= db.relationship('Order', backref='user')
 
     
     # string print method
@@ -36,8 +34,6 @@ class Event(db.Model):
 	
     # relation to call event.comments and comment.event
     comments = db.relationship('Comment', backref='event')
-    # orders= db.relationship('Order', backref='event')
-    # user= db.relationship('User', backref='event')
 	
     # string print method
     def __repr__(self):
@@ -65,7 +61,3 @@ class Order(db.Model):
 
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-
-    # Relationships
-    # user = db.relationship('User', backref='order')
-    # event = db.relationship('Event', backref='order')
