@@ -11,9 +11,9 @@ class User(db.Model):
     password_hash = db.Column(db.String(255), nullable=False)
 
     # relationships
-    event = db.relationship('Event', backref='user')
-    comments = db.relationship('Comment', backref='user')
-    orders= db.relationship('Order', backref='user')
+    event = db.relationship('Event', backref='users')
+    comments = db.relationship('Comment', backref='users')
+    orders= db.relationship('Order', backref='users')
 
     
     # string print method
@@ -34,10 +34,9 @@ class Event(db.Model):
     tickets = db.Column(db.Integer, nullable=False)
 	
     # relation to call event.comments and comment.event
-    comments = db.relationship('Comment', backref='event')
-    orders= db.relationship('Order', backref='event')
-    user= db.relationship('User', backref='event')
-
+    comments = db.relationship('Comment', backref='events')
+    orders= db.relationship('Order', backref='events')
+    user= db.relationship('User', backref='events')
 	
     # string print method
     def __repr__(self):
@@ -67,5 +66,5 @@ class Order(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     # Relationships
-    event = db.relationship('Event', backref='orders')
     user = db.relationship('User', backref='orders')
+    event = db.relationship('Event', backref='orders')

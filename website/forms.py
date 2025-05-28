@@ -36,9 +36,9 @@ class CommentForm(FlaskForm):
   text = TextAreaField('Comment', [InputRequired()])
   submit = SubmitField('Create')
 
-  class OrderForm(FlaskForm):
-    number_of_tickets = IntegerField('Number of Tickets', validators=[InputRequired()])
-    submit = SubmitField('Book Now')
+class OrderForm(FlaskForm):
+  number_of_tickets = IntegerField('Number of Tickets', validators=[InputRequired()])
+  submit = SubmitField('Book Now')
 
 
 # User login
