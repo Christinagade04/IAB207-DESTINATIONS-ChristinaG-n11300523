@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
 from .models import Event, Comment
 from .forms import EventForm, CommentForm
 from . import db
@@ -10,10 +10,12 @@ from flask_login import login_required, current_user
 event_db = Blueprint('event', __name__, url_prefix='/events')
 
 @event_db.route('/<id>')
-def show(id):
+def details(id):
     event = db.session.scalar(db.select(Event).where(Event.id==id))
     # create the comment form
     form = CommentForm()    
+    if not event:
+       abort(404)
     return render_template('events/event-details.html', event=event, form=form)
 
 @event_db.route('/create', methods=['GET', 'POST'])
@@ -28,6 +30,11 @@ def create():
        name=form.name.data,
        description=form.description.data,
        image=db_file_path,
+       date=form.date.data,
+       start_time=form.start_time.data,
+       end_time=form.end_time.data,
+       location=form.location.data,
+       category=form.category.data,
        tickets=form.tickets.data)
     
     # add the object to the db session
@@ -66,7 +73,8 @@ def comment(id):
     event = db.session.scalar(db.select(Event).where(Event.id==id))
     if form.validate_on_submit():  
       #read the comment from the form
-      comment = Comment(text=form.text.data, event=event,
+      comment = Comment(text=form.text.data, 
+                        event=event,
                         user=current_user
                         ) 
       #here the back-referencing works - comment.event is set
@@ -78,5 +86,5 @@ def comment(id):
       flash('Your comment has been added', 'success')
 
       # print('Your comment has been added', 'success') 
-    # using redirect sends a GET request to event.show
-    return redirect(url_for('event.show', id=id))
+    # using redirect sends a GET request to event.details
+    return redirect(url_for('event.details', id=id))
